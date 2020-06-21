@@ -1,0 +1,56 @@
+fragment userFragment on User {
+    pseudo
+    token
+}
+
+fragment questionFragment on Question {
+    id
+    content
+    votes
+    userVoteType
+    user {
+        pseudo
+    }
+}
+
+query getQuestions {
+    questions {
+        ...questionFragment
+    }
+}
+
+subscription QuestionChange {
+    questionChange {
+        ...questionFragment
+    }
+}
+
+mutation createUser($pseudo: String!, $pwd: String!) {
+    createUser(pseudo: $pseudo, pwd: $pwd) {
+        ...userFragment
+    }
+}
+
+mutation upvoteQuestion($questionId: Int!) {
+    upvoteQuestion(questionId: $questionId) {
+        id
+    }
+}
+
+mutation downvoteQuestion($questionId: Int!) {
+    downvoteQuestion(questionId: $questionId) {
+        id
+    }
+}
+
+mutation cancelQuestionVote($questionId: Int!) {
+    cancelQuestionVote(questionId: $questionId) {
+        id
+    }
+}
+
+mutation createQuestion($content: String!) {
+    createQuestion(content: $content) {
+        ...questionFragment
+    }
+}
