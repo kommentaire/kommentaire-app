@@ -5,6 +5,7 @@ import com.apollographql.apollo.network.http.ApolloHttpNetworkTransport
 import com.apollographql.apollo.network.ws.ApolloWebSocketNetworkTransport
 import fr.kommentaire.lib.fragment.QuestionFragment
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -92,13 +93,19 @@ class KomRepository {
 
             emit(list)
 
-            getClient(user.token).subscribe(QuestionChangeSubscription()).execute().collect {
-                val changes = it.data?.questionChange?.mapNotNull { it.fragments.questionFragment }
-                if (changes != null) {
-                    list = mergeLists(list, changes)
-                    emit(list)
-                }
-            }
+            getClient(user.token).subscribe(QuestionChangeSubscription())
+                    .execute()
+                    .retry {
+                        delay(1000)
+                        true
+                    }
+                    .collect {
+                        val changes = it.data?.questionChange?.mapNotNull { it.fragments.questionFragment }
+                        if (changes != null) {
+                            list = mergeLists(list, changes)
+                            emit(list)
+                        }
+                    }
         }
     }
 
