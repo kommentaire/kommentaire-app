@@ -21,8 +21,7 @@ final class UserData: ObservableObject  {
     private let repository = KomRepository()
     
     func fetch() {
-        ExtensionsKt.staticGetQuestions(repository: repository, user:  user) {
-        //repository.getQuestions(user: user) {
+        repository.getQuestions(user: user) {
             self.questions = $0
         }
     }

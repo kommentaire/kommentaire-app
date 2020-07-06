@@ -12,19 +12,8 @@ import platform.darwin.*
 fun KomRepository.getQuestions(user: KomUser, callback: (List<QuestionFragment>) -> Unit) {
     GlobalScope.launch(mainDispatcher) {
         getQuestions(user).collect {
-            it.freeze()
-            dispatch_async(queue = dispatch_get_main_queue()) {
-                callback(it)
-            }
-        }
-    }
-}
-
-fun staticGetQuestions(repository: KomRepository, user: KomUser, callback: (List<QuestionFragment>) -> Unit) {
-    GlobalScope.launch(mainDispatcher) {
-        repository.getQuestions(user).collect {
-            it.freeze()
             callback(it)
         }
     }
 }
+
