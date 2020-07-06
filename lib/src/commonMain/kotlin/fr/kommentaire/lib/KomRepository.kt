@@ -1,9 +1,12 @@
 package fr.kommentaire.lib
 
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.ExecutionContext
+import com.apollographql.apollo.dispatcher.ApolloCoroutineDispatcherContext
 import com.apollographql.apollo.network.http.ApolloHttpNetworkTransport
 import com.apollographql.apollo.network.ws.ApolloWebSocketNetworkTransport
 import fr.kommentaire.lib.fragment.QuestionFragment
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -17,10 +20,11 @@ expect fun newTransport(accessToken: String?): ApolloHttpNetworkTransport
 expect fun newWebSocketTransport(accessToken: String?): ApolloWebSocketNetworkTransport
 
 class KomRepository {
-    fun getClient(accessToken: String? = null): ApolloClient {
+    private fun getClient(accessToken: String? = null): ApolloClient {
         return ApolloClient(
                 networkTransport = newTransport(accessToken),
-                subscriptionNetworkTransport = newWebSocketTransport(accessToken)
+                subscriptionNetworkTransport = newWebSocketTransport(accessToken),
+                executionContext = ApolloCoroutineDispatcherContext(defaultDispatcher())
         )
     }
 
@@ -91,6 +95,7 @@ class KomRepository {
 
             var list = mergeLists(initialList, emptyList())
 
+            println("emit list")
             emit(list)
 
             getClient(user.token).subscribe(QuestionChangeSubscription())
@@ -139,3 +144,5 @@ class KomRepository {
 class KomUser(val pseudo: String, val token: String) {
 
 }
+
+expect fun defaultDispatcher(): CoroutineDispatcher

@@ -12,6 +12,8 @@ import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.soloader.SoLoader
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
@@ -101,3 +103,5 @@ class KommentaireInitializer : Initializer<Context> {
         return mutableListOf()
     }
 }
+
+actual fun defaultDispatcher() = Dispatchers.Main as CoroutineDispatcher

@@ -6,13 +6,20 @@ plugins {
 
 kotlin {
     android()
+    ios {
+        binaries {
+            framework {
+                //freeCompilerArgs = freeCompilerArgs + "-Xobjc-generics"
+            }
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
-                api("com.apollographql.apollo:apollo-api:2.2.2-SNAPSHOT")
-                api("com.apollographql.apollo:apollo-runtime-kotlin:2.2.2-SNAPSHOT")
+                api("com.apollographql.apollo:apollo-api:2.2.3-SNAPSHOT")
+                api("com.apollographql.apollo:apollo-runtime-kotlin:2.2.3-SNAPSHOT")
             }
         }
 
